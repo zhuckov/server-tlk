@@ -19,9 +19,9 @@
     echo json_encode(["error" => "Пользователь с таким логином не найден '$login'"]);
   }else { 
     $user = $result->fetch_assoc();
-    if ($pass == $user['password']) {
-      echo json_encode(["message" => "Пользователь аутентифицирован успешно"]);
-    }
+    if (password_verify($pass, $user['password'])) {
+      echo json_encode(["message" => "Пользователь аутентифицирован успешно", "login" => $login]);
+  }
     else {
       http_response_code(400);
       echo json_encode(["error" => "Неправильный пароль"]);

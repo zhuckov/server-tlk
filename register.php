@@ -6,6 +6,7 @@
   require "./db/connect.php";
   $login = $_POST['username'];
   $pass = $_POST['password'];
+  $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
 
   $sql_check_user = "SELECT * FROM users WHERE login = ?;";
   $stmt_check_user = $conn->prepare($sql_check_user);
@@ -20,7 +21,7 @@
   }else {
     $sql_insert_user = "INSERT INTO users (login, password) VALUES (?, ?)";
     $stmt_insert_user = $conn->prepare($sql_insert_user);
-    $stmt_insert_user-> bind_param("ss", $login, $pass);
+    $stmt_insert_user-> bind_param("ss", $login, $hashed_pass);
   
     if ($stmt_insert_user->execute()) {
       echo json_encode(["message" => "User registered successfully"]);
